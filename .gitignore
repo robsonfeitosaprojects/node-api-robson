@@ -8,7 +8,7 @@ node_modules/
 dist/
 tmp
 tmp/*
-ProductsImages
+ProductsImages/*
 .env
 
 # Compiled Java class files
