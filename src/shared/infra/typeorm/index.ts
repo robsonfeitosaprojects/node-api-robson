@@ -15,8 +15,16 @@ const dataSource = new DataSource({
   database: process.env.DB_DATABASE_PG,
   logging: false,
   synchronize: false,
-  entities: [`./src/modules/**/infra/typeorm/entities/*`],
-  migrations: [`./src/shared/**/infra/typeorm/migrations/*`],
+  entities: [
+    `./${
+      process.env.NODE_ENV === 'local' ? 'src' : 'dist'
+    }/modules/**/infra/typeorm/entities/*`,
+  ],
+  migrations: [
+    `./${
+      process.env.NODE_ENV === 'local' ? 'src' : 'dist'
+    }/shared/**/infra/typeorm/migrations/*`,
+  ],
   extra: {
     ssl: false,
   },
