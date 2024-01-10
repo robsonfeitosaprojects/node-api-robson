@@ -43,7 +43,7 @@ export default {
   config: {
     disk: {},
     aws: {
-      bucket: 'fertsolo-storage-archive',
+      bucket: 'store-sample-storage-archive',
     },
   },
 } as IUploadConfig
