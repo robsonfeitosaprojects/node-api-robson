@@ -39,7 +39,6 @@ class CreateTeamService {
       }
 
       professional.team = team
-      console.log({ professional })
 
       await this.professionalRepository.save(professional)
     }

@@ -1,25 +1,23 @@
-import Address from '@modules/users/infra/typeorm/entities/Address'
-import User from '@modules/users/infra/typeorm/entities/User'
 import OrdersStatus from '../infra/typeorm/entities/OrdersStatus'
+import Orders from '../infra/typeorm/entities/Order'
 
-interface IProduct {
-  product_name: string
-  product_id: string
-  price: number
-  quantity: number
-}
-
-export default interface ICreateOrderDTO {
-  user: User
-  address: Address | null
-  products: IProduct[]
-  cod_order: string
-  payment_method: string
-  amount: number
-  type_product: string
-  professional?: string
-  tracking_code?: string
+export default interface ICreateOrderDTO
+  extends Omit<
+    Orders,
+    | 'id'
+    | 'orders_products'
+    | 'user_id'
+    | 'status'
+    | 'coupon_applied'
+    | 'freight'
+    | 'tracking_code'
+    | 'created_at'
+    | 'updated_at'
+  > {
+  address_id?: string
+  professional_id?: string
   coupon_applied?: string
+  tracking_code?: string
   freight?: string
 }
 

@@ -6,7 +6,7 @@ export default class CreateOrderProduct1629248037340
   public async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.createTable(
       new Table({
-        name: 'or101_orders_products',
+        name: 'or100_pr100_order_product',
         columns: [
           {
             name: 'id',
@@ -16,50 +16,34 @@ export default class CreateOrderProduct1629248037340
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'product_id',
-            type: 'uuid',
-          },
-          {
             name: 'order_id',
             type: 'uuid',
           },
           {
-            name: 'price',
-            type: 'decimal',
-            precision: 8,
-            scale: 2,
+            name: 'product_id',
+            type: 'uuid',
           },
           {
             name: 'quantity',
             type: 'int',
           },
-          {
-            name: 'created_at',
-            type: 'timestamp with time zone',
-            default: 'now()',
-          },
-          {
-            name: 'updated_at',
-            type: 'timestamp with time zone',
-            default: 'now()',
-          },
         ],
         foreignKeys: [
           {
-            name: 'ProductId',
+            name: 'ProductOrderId',
             columnNames: ['product_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'pd100_products',
             onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
           },
           {
-            name: 'OrderId',
+            name: 'OrderProductId',
             columnNames: ['order_id'],
             referencedColumnNames: ['id'],
             referencedTableName: 'or100_orders',
             onUpdate: 'CASCADE',
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
           },
         ],
       }),
@@ -67,6 +51,6 @@ export default class CreateOrderProduct1629248037340
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.dropTable('or101_orders_products')
+    await queryRunner.dropTable('or100_pr100_order_product')
   }
 }

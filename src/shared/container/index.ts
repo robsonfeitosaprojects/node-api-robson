@@ -74,6 +74,8 @@ import TimeIntervalsRepository from '@modules/users/infra/typeorm/repositories/T
 
 import ScheduleRepository from '@modules/schedule/infra/typeorm/repositories/ScheduleRepository'
 import IScheduleRepository from '@modules/schedule/repositories/IScheduleRepository'
+import OrderProductRepository from '@modules/orders/infra/typeorm/repositories/OrderProductRepository'
+import IOrderProductRepository from '@modules/orders/repositories/IOrderProductRepository'
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
@@ -187,4 +189,9 @@ container.registerSingleton<ITimeIntervalsRepository>(
 container.registerSingleton<IScheduleRepository>(
   'ScheduleRepository',
   ScheduleRepository,
+)
+
+container.registerSingleton<IOrderProductRepository>(
+  'OrderProductRepository',
+  OrderProductRepository,
 )

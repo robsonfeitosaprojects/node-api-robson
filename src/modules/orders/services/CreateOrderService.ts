@@ -1,57 +1,45 @@
 import { inject, injectable } from 'tsyringe'
-
 import AppError from '@shared/errors/AppError'
-
 import IProductsRepository from '@modules/products/repositories/IProductsRepository'
-import IUpdateProductsQuantityDTO from '@modules/products/dtos/IUpdateProductsQuantityDTO'
 import Order from '../infra/typeorm/entities/Order'
 import IOrdersRepository from '../repositories/IOrdersRepository'
 import IUsersRepository from '@modules/users/repositories/IUsersRepository'
-import Product from '@modules/products/infra/typeorm/entities/Product'
 import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider'
 import IAddressRepository from '@modules/users/repositories/IAddressRepository'
+import ICreateOrderDTO from '../dtos/ICreateOrderDTO'
+import IOrderProductRepository from '../repositories/IOrderProductRepository'
 
 export interface ProductOrder {
   productId: string
   quantity: number
 }
 
-type StatusPayment =
-  | 'pending'
-  | 'awaiting_payment'
-  | 'awaiting_fulfillment'
-  | 'awaiting_shipment'
-  | 'awaiting_pickup'
-  | 'partially_shipped'
-  | 'completed'
-  | 'shiped'
-  | 'cancelled'
-  | 'declined'
-  | 'refunded'
-  | 'disputed'
+// type StatusPayment =
+//   | 'pending'
+//   | 'awaiting_payment'
+//   | 'awaiting_fulfillment'
+//   | 'awaiting_shipment'
+//   | 'awaiting_pickup'
+//   | 'partially_shipped'
+//   | 'completed'
+//   | 'shiped'
+//   | 'cancelled'
+//   | 'declined'
+//   | 'refunded'
+//   | 'disputed'
 
-export interface CreateOrderRequest {
-  products: ProductOrder[]
-  tracking_code?: string
-  status?: StatusPayment
-  payment_method: 'pix' | 'tickets'
-  amount: number
-  type_product: string
-  address_id: string
-  professional?: string
-  coupon_applied?: {
-    coupon: string
-    discount: number
-  }
-  freight?: {
-    name: string
-    value: number
-  }
+interface productsOrder {
+  productId: string
+  quantity: number
+}
+
+export interface ICreatePayloadOrder extends ICreateOrderDTO {
+  products_order: productsOrder[]
 }
 
 interface IRequest {
   user_id: string
-  payload: CreateOrderRequest
+  payload: ICreatePayloadOrder
 }
 
 @injectable()
@@ -71,20 +59,13 @@ class CreateOrderService {
 
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('OrderProductRepository')
+    private orderProductRepository: IOrderProductRepository,
   ) {}
 
   public async execute({ user_id, payload }: IRequest): Promise<Order> {
-    const {
-      products,
-      payment_method,
-      coupon_applied,
-      freight,
-      amount,
-      address_id,
-      tracking_code,
-      professional,
-      type_product,
-    } = payload
+    const { products_order, address_id, ...rest } = payload
 
     const userExist = await this.usersRepository.findById(user_id)
 
@@ -92,71 +73,78 @@ class CreateOrderService {
       throw new AppError('This user does not exists')
     }
 
-    const addressExist = await this.addressRepository.findById(address_id)
+    console.log({ products_order })
+    const productIds = products_order.map((po) => po.productId)
 
-    const productsFind: Product[] = []
+    const productsData = await this.productsRepository.findAndCount(
+      {
+        limit: 99999,
+        page: 1,
+      },
+      {
+        productIds: JSON.stringify(productIds),
+      },
+      {
+        alphabeticalDESC: true,
+      },
+    )
 
-    for (const product of products) {
-      const productExist = await this.productsRepository.findById(
-        product.productId,
-      )
+    // TODO: Pegou todos os produtos para fazer a deducao
+    const [products] = productsData
+    console.log({ products })
 
-      if (!productExist) {
-        throw new AppError('Products was not found')
-      }
+    // const updatedQuantities: IUpdateProductsQuantityDTO[] = []
 
-      productsFind.push(productExist)
-    }
+    // const updatedProducts = productsFind.map((findProduct) => {
+    //   const orderProduct = orders_products.find(
+    //     (order_product) => order_product.id === findProduct.id,
+    //   )
 
-    const updatedQuantities: IUpdateProductsQuantityDTO[] = []
+    //   if (orderProduct) {
+    //     if (findProduct.type === 'product') {
+    //       // TODO: Verificar quantidade em stoque para simples e multiplos produtos
+    //       // if (findProduct.product_data.quantity < orderProduct.quantity) {
+    //       //   throw new AppError('Hast not quantity available in stock')
+    //       // }
+    //       // TODO: Reduzir quantidade quando for simples ou multiplos produtos
+    //       // if (orderProduct.id) {
+    //       //   updatedQuantities.push({
+    //       //     id: orderProduct.id,
+    //       //     quantity:
+    //       //       findProduct.product_data.quantity - orderProduct.quantity,
+    //       //   })
+    //       // }
+    //       // return productsFind
+    //     }
+    //   }
 
-    const updatedProducts = productsFind.map((findProduct) => {
-      const orderProduct = products.find(
-        (product) => product.productId === findProduct.id,
-      )
-
-      if (orderProduct) {
-        if (findProduct.type === 'product') {
-          if (findProduct.product_data.quantity < orderProduct.quantity) {
-            throw new AppError('Hast not quantity available in stock')
-          }
-
-          updatedQuantities.push({
-            id: orderProduct.productId,
-            quantity: findProduct.product_data.quantity - orderProduct.quantity,
-          })
-
-          return {
-            ...findProduct,
-            quantity: orderProduct.quantity,
-          }
-        }
-      }
-
-      return findProduct
-    })
+    //   return findProduct
+    // })
 
     const codOrder = await this.builderHash()
     // await this.productsRepository.updateQuantity(updatedQuantities)
 
+    if (address_id) {
+      const addressExist = await this.addressRepository.findById(address_id)
+
+      if (!addressExist) {
+        throw new AppError('Address not found')
+      }
+    }
+
     const order = await this.ordersRepository.create({
+      ...rest,
       user: userExist,
-      address: addressExist ?? null,
+      address_id,
       cod_order: codOrder,
-      payment_method,
-      type_product,
-      amount,
-      professional,
-      coupon_applied: coupon_applied as string | undefined,
-      freight: freight as string | undefined,
-      tracking_code,
-      products: updatedProducts.map((product) => ({
-        product_name: product.name,
-        product_id: product.id,
-        price: product.price ?? 0,
-        quantity:
-          product.type === 'product' ? product.product_data.quantity : 1,
-      })),
+    })
+
+    products.forEach(async (product, index) => {
+      await this.orderProductRepository.create({
+        order,
+        product,
+        quantity: products_order[index].quantity,
+      })
     })
 
     return order

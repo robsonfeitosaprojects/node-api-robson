@@ -9,7 +9,7 @@ export default interface CreateProductDTO
     | 'deleted_at'
     | 'created_at'
     | 'updated_at'
-    | 'order_products'
+    | 'orders_products'
     | 'wish'
     | 'images'
     | 'attributes'

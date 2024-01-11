@@ -9,11 +9,10 @@ import {
   OneToMany,
 } from 'typeorm'
 
-import OrdersProducts from '@modules/orders/infra/typeorm/entities/OrdersProducts'
 import User from '@modules/users/infra/typeorm/entities/User'
 import Address from '@modules/users/infra/typeorm/entities/Address'
 import OrdersStatus from './OrdersStatus'
-import Schedule from '@modules/schedule/infra/typeorm/entities/Schedule'
+import OrderProduct from './OrderProduct'
 
 @Entity('or100_orders')
 class Orders {
@@ -29,13 +28,13 @@ class Orders {
 
   @OneToOne(() => Address, { eager: true, nullable: true })
   @JoinColumn({ name: 'address_id' })
-  address: Address
+  address?: Address
 
   @Column()
   cod_order: string
 
   @Column()
-  professional: string
+  professional_name?: string
 
   @OneToMany(() => OrdersStatus, (orderStatus) => orderStatus.order, {
     eager: true,
@@ -61,11 +60,11 @@ class Orders {
   @Column()
   tracking_code: string
 
-  @OneToMany(() => OrdersProducts, (ordersProducts) => ordersProducts.order, {
+  @OneToMany(() => OrderProduct, (order_product) => order_product.order, {
     eager: true,
     cascade: true,
   })
-  orders_products: OrdersProducts[]
+  orders_products: OrderProduct[]
 
   @CreateDateColumn()
   created_at: Date

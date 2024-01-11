@@ -12,7 +12,6 @@ import {
   ManyToMany,
 } from 'typeorm'
 
-import OrdersProducts from '@modules/orders/infra/typeorm/entities/OrdersProducts'
 import ProductWish from './ProductWish'
 import ProductData from './ProductData'
 import ProductAttributes from './ProductAttributes'
@@ -21,6 +20,8 @@ import Archive from '@modules/archives/infra/typeorm/entities/Archive'
 import TimeDiscount from './TimeDiscount'
 import Team from '@modules/users/infra/typeorm/entities/Team'
 import Categories from './ProductCategory'
+import Orders from '@modules/orders/infra/typeorm/entities/Order'
+import OrderProduct from '@modules/orders/infra/typeorm/entities/OrderProduct'
 
 @Entity('pd100_products')
 class Product {
@@ -74,8 +75,8 @@ class Product {
   @Expose()
   categories_items: Categories[]
 
-  @OneToMany(() => OrdersProducts, (ordersProducts) => ordersProducts.product)
-  order_products: OrdersProducts[]
+  @OneToMany(() => OrderProduct, (order_product) => order_product.product)
+  orders_products: OrderProduct[]
 
   @OneToOne(() => ProductWish, (wish) => wish.product, {
     nullable: true,

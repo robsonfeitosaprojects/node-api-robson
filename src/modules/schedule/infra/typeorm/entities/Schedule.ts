@@ -16,12 +16,9 @@ class Schedule {
   @Column()
   date: Date
 
-  @Column()
-  professional_id: string
-
   @OneToOne(() => Professional, { eager: true })
   @JoinColumn({ name: 'professional_id' })
-  professinal: Professional
+  professional: Professional
 
   @OneToOne(() => Orders, { eager: true, nullable: true })
   @JoinColumn({ name: 'order_id' })
