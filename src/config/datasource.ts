@@ -6,6 +6,6 @@ interface IDatasourceConfig {
 
 export default {
   options: {
-    dropSchema: false,
+    dropSchema: process.env.CLEAN_DATASOURCE ?? false,
   },
 } as IDatasourceConfig
