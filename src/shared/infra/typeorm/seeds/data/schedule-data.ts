@@ -9,6 +9,7 @@ export const scheduleData: ICreateScheduleDTO[] = [
     observations: '',
     order: {} as Orders,
     professional: {} as Professional,
+    professional_id: '',
   },
   {
     name: 'Revisão do carro',
@@ -16,6 +17,7 @@ export const scheduleData: ICreateScheduleDTO[] = [
     observations: '',
     order: {} as Orders,
     professional: {} as Professional,
+    professional_id: '',
   },
   {
     name: 'Troca de oléo',
@@ -23,6 +25,7 @@ export const scheduleData: ICreateScheduleDTO[] = [
     observations: '',
     order: {} as Orders,
     professional: {} as Professional,
+    professional_id: '',
   },
   {
     name: 'Formataćão de notebook',
@@ -30,6 +33,7 @@ export const scheduleData: ICreateScheduleDTO[] = [
     observations: '',
     order: {} as Orders,
     professional: {} as Professional,
+    professional_id: '',
   },
   {
     name: 'Instalaćão de sistema de vigilância',
@@ -37,5 +41,6 @@ export const scheduleData: ICreateScheduleDTO[] = [
     observations: '',
     order: {} as Orders,
     professional: {} as Professional,
+    professional_id: '',
   },
 ]
