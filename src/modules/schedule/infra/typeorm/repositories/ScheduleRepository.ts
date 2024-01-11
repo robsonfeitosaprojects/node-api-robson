@@ -57,6 +57,10 @@ class ScheduleRepository implements IScheduleRepository {
     const found = await this.ormRepository.findAndCount({
       take: options.limit,
       skip: (options.page - 1) * options.limit,
+      order: {
+        updated_at: 'DESC',
+        created_at: 'DESC',
+      },
     })
 
     return found

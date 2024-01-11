@@ -21,10 +21,12 @@ class IndexUsersProfessionalAvailableService {
     const professional = await this.professionalRepository.findAndCount(options)
 
     const usersIds = professional[0]
-      .filter((professional) => professional.user_id)
+      .filter((professional) => !!professional.user_id)
       .map((c) => c.user_id)
 
-    const users = await this.usersRepository.findInNotUsersIds(usersIds)
+    const users = await this.usersRepository.findInNotUsersIds(
+      usersIds as string[],
+    )
 
     return classToClass(users)
   }

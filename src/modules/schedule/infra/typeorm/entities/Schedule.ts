@@ -6,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
 } from 'typeorm'
 
 @Entity('sc100_schedulings')
@@ -15,6 +17,9 @@ class Schedule {
 
   @Column()
   date: Date
+
+  @Column('uuid')
+  professional_id: string
 
   @OneToOne(() => Professional, { eager: true })
   @JoinColumn({ name: 'professional_id' })
@@ -29,6 +34,12 @@ class Schedule {
 
   @Column()
   observations: string
+
+  @CreateDateColumn()
+  created_at: Date
+
+  @UpdateDateColumn()
+  updated_at: Date
 }
 
 export default Schedule

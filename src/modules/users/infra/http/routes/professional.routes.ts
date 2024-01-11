@@ -6,10 +6,10 @@ import ensureAuthenticated from '../middlewares/ensureAuthenticated'
 const professionalRouter = Router()
 const crofessionalController = new ProfessionalController()
 
+professionalRouter.get('/availables', crofessionalController.indexAllAvailable)
 professionalRouter.use(ensureAuthenticated)
 professionalRouter.post('/', crofessionalController.create)
 professionalRouter.put('/:professionalId', crofessionalController.update)
-professionalRouter.get('/availables', crofessionalController.indexAllAvailable)
 professionalRouter.post('/send-invite', crofessionalController.sendActive)
 professionalRouter.get(
   '/users-availables',

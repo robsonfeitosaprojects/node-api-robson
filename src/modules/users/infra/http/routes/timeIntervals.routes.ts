@@ -1,12 +1,9 @@
 import { Router } from 'express'
 
 import TimeIntervalsController from '../controllers/TimeIntervalsController'
-import ensureAuthenticated from '../middlewares/ensureAuthenticated'
 
 const timeIntervalsRouter = Router()
 const timeIntervalsController = new TimeIntervalsController()
-
-timeIntervalsRouter.use(ensureAuthenticated)
 
 timeIntervalsRouter.post('/time-intervals', timeIntervalsController.create)
 timeIntervalsRouter.put(

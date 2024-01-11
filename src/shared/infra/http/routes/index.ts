@@ -55,7 +55,7 @@ routes.use('/coupon', couponRouter)
 routes.use('/categories', categoriesRouter)
 routes.use('/archive', archiveRouter)
 routes.use('/teams', teamsRouter)
-routes.use('/professionals', professionalRouter, timeIntervalsRouter)
+routes.use('/professionals', timeIntervalsRouter, professionalRouter)
 routes.use('/schedules', scheduleRouter)
 
 export default routes

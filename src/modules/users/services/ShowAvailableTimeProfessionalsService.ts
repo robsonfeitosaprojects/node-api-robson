@@ -24,7 +24,6 @@ class ShowAvailableTimeProfessionalsService {
     professionalId: string,
     date: string,
   ): Promise<IResponse> {
-    console.log({ date, professionalId })
     const referenceDate = dayjs(String(date))
 
     const professionalAvailable =
@@ -47,12 +46,8 @@ class ShowAvailableTimeProfessionalsService {
     const startHour = time_start_in_minutes_one / 60
     const endHour = time_end_in_minutes_one / 60
 
-    console.log({ professionalAvailable })
-
-    const startHourTwo = time_start_in_minutes_two / 60
-    const endHourTwo = time_end_in_minutes_two / 60
-
-    console.log({ startHour, endHour, startHourTwo, endHourTwo })
+    const startHourTwo = (time_start_in_minutes_two ?? 0) / 60
+    const endHourTwo = (time_end_in_minutes_two ?? 0) / 60
 
     const possibleTimesOne = Array.from({ length: endHour - startHour }).map(
       (_, i) => {
@@ -80,7 +75,6 @@ class ShowAvailableTimeProfessionalsService {
         referenceDate.set('hour', endHourTwo).toDate(),
       )
 
-    console.log({ blockedTimes })
     const availableTimesOne = possibleTimesOne.filter((time) => {
       const isTimeBlocked = blockedTimes.some(
         (blockedTime) => blockedTime.date.getHours() === time,
@@ -100,8 +94,6 @@ class ShowAvailableTimeProfessionalsService {
 
       return !isTimeBlocked && !isTimeInPast
     })
-
-    console.log({ availableTimesTwo, possibleTimesTwo })
 
     const availableTimes = availableTimesOne.concat(availableTimesTwo)
     const possibleTimes = possibleTimesOne.concat(possibleTimesTwo)
