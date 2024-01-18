@@ -38,7 +38,9 @@ class LogRepository implements ILogRepository {
     const users = await this.ormRepository.findAndCount({
       take: options.limit,
       skip: (options.page - 1) * options.limit,
-      order: {},
+      order: {
+        created_at: 'DESC',
+      },
     })
 
     return users

@@ -38,7 +38,9 @@ class ClientRepository implements IClientRepository {
     const clients = await this.ormRepository.findAndCount({
       take: options.limit,
       skip: (options.page - 1) * options.limit,
-      order: {},
+      order: {
+        created_at: 'DESC',
+      },
     })
 
     return clients
