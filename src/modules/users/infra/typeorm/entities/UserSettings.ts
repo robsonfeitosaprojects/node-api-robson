@@ -7,7 +7,6 @@ import {
   OneToOne,
 } from 'typeorm'
 
-import ICreateCreditCardDTO from '@modules/dtos/ICreateCreditCardDTO'
 import uploadConfig from '@config/upload'
 
 import { Exclude, Expose } from 'class-transformer'
@@ -61,7 +60,5 @@ class UserSettings {
     }
   }
 }
-
-export type aa = ICreateCreditCardDTO
 
 export default UserSettings

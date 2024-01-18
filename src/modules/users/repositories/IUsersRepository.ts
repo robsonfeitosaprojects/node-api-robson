@@ -13,8 +13,6 @@ export default interface IUsersRepository {
   findByIds(ids: string[]): Promise<User[]>
   findByEmail(email: string): Promise<User | null>
   findAndCount(options: IPaginationOptionsDTO): Promise<[User[], number]>
-  findUserForName(name: string): Promise<User | null>
-  findInNotUsersIds(usersIds: string[]): Promise<User[]>
   create(userData: ICreateUserDTO): Promise<User>
   delete(id: string): Promise<void>
   save(user: User): Promise<User>

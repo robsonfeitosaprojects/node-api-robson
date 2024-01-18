@@ -6,6 +6,5 @@ const sessionsRouter = Router()
 const sessionsController = new SessionsController()
 
 sessionsRouter.post('/', sessionsController.create)
-sessionsRouter.post('/google', sessionsController.createGoogle)
 
 export default sessionsRouter

@@ -33,8 +33,6 @@ class UsersRepository implements IUsersRepository {
   }
 
   public async findByIds(ids: string[]): Promise<User[]> {
-    const isFulled = ids.length !== 0 || null
-
     const users = this.ormRepository.find({
       where: {
         id: In(ids),
@@ -62,21 +60,6 @@ class UsersRepository implements IUsersRepository {
     })
 
     return user
-  }
-
-  public async findInNotUsersIds(usersIds: string[]): Promise<User[]> {
-    if (usersIds.length === 0) {
-      const users = await this.ormRepository.find()
-      return users
-    }
-
-    const users = await this.ormRepository
-      .createQueryBuilder('pr100_professional')
-      .where('pr100_professional.id NOT IN (:...usersIds)', {
-        usersIds,
-      })
-      .getMany()
-    return users
   }
 
   public async findUserForName(name: string): Promise<User | null> {

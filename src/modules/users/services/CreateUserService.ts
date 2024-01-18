@@ -10,7 +10,6 @@ import { UserPromise } from '../dtos/IPromiseUser'
 import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider'
 import IUserTokensRepository from '../repositories/IUserTokensRepository'
 import User from '../infra/typeorm/entities/User'
-import IProfessionalRepository from '../repositories/IProfessionalRepository'
 
 interface IRequest {
   name: string
@@ -40,9 +39,6 @@ class CreateUserService {
 
     @inject('UserTokensRepository')
     private userTokensRepository: IUserTokensRepository,
-
-    @inject('ProfessionalRepository')
-    private professionalRepository: IProfessionalRepository,
   ) {}
 
   public async execute(userData: IRequest): Promise<UserPromise> {
@@ -70,17 +66,6 @@ class CreateUserService {
       password: hashedPassword,
       settings_id: userSettings.id,
     })
-
-    const professional = await this.professionalRepository.findByInvite(
-      userData.email,
-    )
-
-    if (professional) {
-      professional.user_id = user.id
-      professional.user = user
-
-      await this.professionalRepository.save(professional)
-    }
 
     await this.sendActivedUserEmail(user)
 

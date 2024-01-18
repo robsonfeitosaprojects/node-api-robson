@@ -1,4 +1,3 @@
-import Order from '@modules/orders/infra/typeorm/entities/Order'
 import { Exclude } from 'class-transformer'
 import {
   Entity,
@@ -32,14 +31,6 @@ class UserTransaction {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
   user: User
-
-  @Exclude()
-  @Column()
-  order_id: string
-
-  @ManyToOne(() => Order)
-  @JoinColumn({ name: 'order_id' })
-  order: Order
 
   @Column()
   brand: string

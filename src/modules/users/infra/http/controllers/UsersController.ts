@@ -3,26 +3,13 @@ import { container } from 'tsyringe'
 import { classToClass } from 'class-transformer'
 
 import CreateUserService from '@modules/users/services/CreateUserService'
-import CreateMigrateUserService from '@modules/users/services/CreateMigrateUserService'
 import ShowUserService from '@modules/users/services/ShowUserService'
 import IndexUsersService from '@modules/users/services/IndexUsersService'
 import UpdateUserService from '@modules/users/services/UpdateUserService'
-import UpdateUserAvatarService from '@modules/users/services/UpdateUserAvatarService'
 import DeleteUserService from '@modules/users/services/DeleteUserService'
-import IndexCountUserService from '@modules/users/services/IndexCountUserService'
-import TesteService from '@modules/users/services/TesteService'
+import SendEmailClientService from '@modules/users/services/SendEmailClientService'
 
 export default class UsersController {
-  public async teste(req: Request, res: Response): Promise<Response> {
-    const createUser = container.resolve(TesteService)
-
-    const user = await createUser.execute({
-      transactionId: '5b13dba1-1b2f-4ce1-9310-1bd17df65766',
-    })
-
-    return res.json(classToClass(user))
-  }
-
   public async create(req: Request, res: Response): Promise<Response> {
     const createUser = container.resolve(CreateUserService)
 
@@ -31,12 +18,15 @@ export default class UsersController {
     return res.json(classToClass(user))
   }
 
-  public async createMigration(req: Request, res: Response): Promise<Response> {
-    const createUser = container.resolve(CreateMigrateUserService)
+  public async createSendEmailClient(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    const createUser = container.resolve(SendEmailClientService)
 
     await createUser.execute(req.body)
 
-    return res.json({ migrate: 'done' })
+    return res.status(204).send()
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
@@ -47,33 +37,6 @@ export default class UsersController {
     const user = await updateUser.execute({ user_id, userData: request.body })
 
     return response.json(classToClass(user))
-  }
-
-  public async updateAvatar(
-    request: Request,
-    response: Response,
-  ): Promise<Response> {
-    const { user_id } = request.params
-
-    const updateUserAvatar = container.resolve(UpdateUserAvatarService)
-
-    const user = await updateUserAvatar.execute({
-      user_id,
-      avatarFilename: request.file.filename,
-    })
-
-    return response.json(classToClass(user))
-  }
-
-  public async indexCount(
-    request: Request,
-    response: Response,
-  ): Promise<Response> {
-    const count = container.resolve(IndexCountUserService)
-
-    const findCountUser = await count.execute()
-
-    return response.json(findCountUser)
   }
 
   public async index(request: Request, response: Response): Promise<Response> {
