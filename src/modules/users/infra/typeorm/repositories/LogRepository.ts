@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm'
+import { ILike, Repository } from 'typeorm'
 
 import dataSource from '@shared/infra/typeorm'
 import IPaginationOptionsDTO from '@modules/dtos/IPaginationOptionsDTO'
@@ -46,15 +46,17 @@ class LogRepository implements ILogRepository {
     return users
   }
 
-  public async delete(id: string): Promise<void> {
-    const log = await this.ormRepository.findOne({
+  public async delete(name: string): Promise<void> {
+    const logs = await this.ormRepository.find({
       where: {
-        id,
+        ip: ILike(`%${name}%`),
       },
     })
 
-    if (log) {
-      this.ormRepository.remove(log)
+    if (logs) {
+      for (const log of logs) {
+        this.ormRepository.remove(log)
+      }
     }
   }
 

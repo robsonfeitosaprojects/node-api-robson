@@ -8,8 +8,9 @@ class DeleteLogsService {
     private logRepository: ILogRepository,
   ) {}
 
-  public async execute(id: string): Promise<void> {
-    await this.logRepository.delete(id)
+  public async execute(name: string): Promise<void> {
+    console.log({ name })
+    await this.logRepository.delete(name)
   }
 }
 

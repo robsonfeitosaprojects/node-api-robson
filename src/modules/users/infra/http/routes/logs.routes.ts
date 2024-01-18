@@ -10,6 +10,6 @@ logsRouter.post('/', logsController.create)
 
 logsRouter.get('/', logsController.index)
 
-logsRouter.delete('/:id', logsController.delete)
+logsRouter.delete('/', logsController.delete)
 
 export default logsRouter

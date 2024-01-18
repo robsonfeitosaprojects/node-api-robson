@@ -28,11 +28,11 @@ export default class LogsController {
   }
 
   public async delete(request: Request, response: Response): Promise<any> {
-    const { id } = request.params
+    const { name } = request.query
 
     const deleteService = container.resolve(DeleteLogsService)
 
-    await deleteService.execute(id)
+    await deleteService.execute(String(name))
 
     return response.status(204).send()
   }
